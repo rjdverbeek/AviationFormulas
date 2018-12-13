@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: iso-8859-15 -*-
 #==============================================================================
-# avFormula - Some usefull formula in globe and aviation context
+# aviationFormula - Some usefull formula in globe and aviation context
 # Copyright (C) 2018  Oliver Clemens
 # 
 # This program is free software: you can redistribute it and/or modify
@@ -24,19 +24,21 @@
 from math import sin,asin,cos,acos,tan,atan2,sqrt,radians,degrees,pi #@UnusedImport
 
 ## Calculates the great circle distance in arc angle.
-def gcDistance(lat1,lat2,lon1,lon2):
+def gcDistance(lat1,lon1,lat2,lon2):
     lat1 = radians(lat1)
-    lat2 = radians(lat2)
     lon1 = radians(lon1)
+    lat2 = radians(lat2)
     lon2 = radians(lon2)
-    return 2*asin(sqrt((sin((lat1-lat2)/2))**2 + cos(lat1)*cos(lat2)*(sin((lon1-lon2)/2))**2));
+    return 2*asin(sqrt((sin((lat1-lat2)/2))**2 + cos(lat1)*cos(lat2)*(sin((lon1-lon2)/2))**2))
 
 ## Calculates the great circle distance in nautical miles.
-def gcDistanceNm(lat1,lat2,lon1,lon2):
-    return ((180*60)/pi)*gcDistance(lat1,lat2,lon1,lon2)
+def gcDistanceNm(lat1,lon1,lat2,lon2):
+    return ((180*60)/pi)*gcDistance(lat1,lon1,lat2,lon2)
 
 ## Calculates the intermediate coordinates of two points on earth.
-def gcIntermediatePoint(lat1,lat2,lon1,lon2,*args):
+# The optional 5th argument is the relative distance to point 1.
+# 0 returns point 1, 1 returns point 2. Default is 0.5 and the middle.
+def gcIntermediatePoint(lat1,lon1,lat2,lon2,*args):
     lat1 = radians(lat1)
     lat2 = radians(lat2)
     lon1 = radians(lon1)
@@ -49,7 +51,7 @@ def gcIntermediatePoint(lat1,lat2,lon1,lon2,*args):
         f = 0.5
     
     # Calc gc distance between points.
-    d = gcDistance(lat1,lat2,lon1,lon2)
+    d = gcDistance(lat1,lon1,lat2,lon2)
 
     # Calc intermediate point.
     A=sin((1-f)*d)/sin(d)

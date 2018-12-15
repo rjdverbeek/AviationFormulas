@@ -1,12 +1,16 @@
 from setuptools import setup, find_packages
-from aviationFormula import __version__, name
+import re
 
+# Get readme.
 with open("README.md", "r") as fh:
     long_description = fh.read()
+    
+# Get version.
+version = re.findall('(?<=### version )[\d\.]+(?= -)',long_description)[0]
 
 setup(
-    name=name,
-    version=__version__,
+    name="aviationFormula",
+    version=version,
     author="Oliver Clemens",
     author_email="sowintuu@aol.com",
     description="A collection of formula around aviation and the globe in python.",

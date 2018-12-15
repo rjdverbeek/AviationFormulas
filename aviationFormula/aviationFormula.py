@@ -4,24 +4,24 @@
 # aviationFormula - Some usefull formula in globe and aviation context
 # Copyright (C) 2018  Oliver Clemens
 # 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
 # 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <https://www.gnu.org/licenses/>.
 #==============================================================================
 # Inspired by Aviation Formulary V1.46 by Ed Williams.
 # -> http://www.edwilliams.org/avform.htm
 #==============================================================================
 
-from math import sin,asin,cos,acos,tan,atan2,sqrt,radians,degrees,pi #@UnusedImport
+from math import sin,asin,cos,acos,tan,atan2,sqrt,radians,degrees,pi
 
 ## Calculates the great circle distance in arc angle.
 def gcDistance(lat1,lon1,lat2,lon2):

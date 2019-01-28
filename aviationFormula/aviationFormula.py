@@ -55,12 +55,20 @@ def init_bearing_deg(lat_deg1, lon_deg1, lat_deg2, lon_deg2):
                          cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dlon))))
 
 
+# Calculate the final bearing in degrees
 def final_bearing_deg(lat_deg1, lon_deg1, lat_deg2, lon_deg2):
     return normalize_angle_deg(init_bearing_deg(lat_deg2, lon_deg2, lat_deg1, lon_deg1) + 180)
 
-# Normalise to compass bearing
+
+# Normalise to compass bearing (0 to 360 degrees)
 def normalize_angle_deg(angle_deg):
     return angle_deg % 360.0
+
+
+# Normalise to -180 to +180 degrees
+def normalize_longitude_deg(lon_deg):
+    return (lon_deg + 540.0) % 360.0 - 180.0
+
 
 # Calculates the intermediate coordinates of two points.
 # The optional 5th argument is the relative distance to point 1.
@@ -90,6 +98,19 @@ def gc_intermediate_point(lat_deg1, lon_deg1, lat_deg2, lon_deg2, fraction=0.5):
         return (lat_deg1, lon_deg1)
 
 
+def point_at_distance_and_bearing(lat_deg1, lon_deg1, distance_nm, init_bearing_deg):
+    lat1 = radians(lat_deg1)
+    lon1 = radians(lon_deg1)
+    radius_earth_m = 6371008.7714  # Mean radius earth WGS-84
+    radius_earth_nm = radius_earth_m / 1852
+    distance_rad = distance_nm / radius_earth_nm
+    init_bearing = init_bearing_deg / 180 * pi
+    lat2 = asin(sin(lat1) * cos(distance_rad) + cos(lat1) * sin(distance_rad) * cos(init_bearing))
+    lon2 = lon1 + atan2(sin(init_bearing) * sin(distance_rad) * cos(lat1),
+                        cos(distance_rad) - sin(lat1) * sin(lat2))
+    return (degrees(lat2), normalize_longitude_deg(degrees(lon2)))
+
+
 class AviationFormula(unittest.TestCase):
     def test_gc_distance_rad(self):
         lat1_deg = 50
@@ -116,6 +137,10 @@ class AviationFormula(unittest.TestCase):
         angle_deg = -137.446
         self.assertAlmostEqual(normalize_angle_deg(angle_deg), 222.554, places=1)
 
+    def test_normalize_lon_deg(self):
+        angle_deg = -137.446
+        self.assertAlmostEqual(normalize_longitude_deg(angle_deg), -137.446, places=1)
+
     def test_gc_intermediate_point(self):
         lat1_deg = 50
         lon1_deg = 10
@@ -124,6 +149,16 @@ class AviationFormula(unittest.TestCase):
         lat3, lon3 = gc_intermediate_point(lat1_deg, lon1_deg, lat2_deg, lon2_deg)
         self.assertAlmostEqual(lat3, 21.117, places=1)
         self.assertAlmostEqual(lon3, -14.374, places=1)
+
+    def test_point_at_distance_and_bearing(self):
+        lat1_deg = -10.0
+        lon1_deg = -30.0
+        bearing_deg = 200.0
+        distance_nm = 1000.0
+        lat2, lon2 = point_at_distance_and_bearing(lat1_deg, lon1_deg, distance_nm, bearing_deg)
+        self.assertAlmostEqual(lat2, -25.599, places=1)
+        self.assertAlmostEqual(lon2, -36.239, places=1)
+
 
 if __name__ == '__main__':
     unittest.main()

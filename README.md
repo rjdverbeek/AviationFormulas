@@ -10,8 +10,12 @@ All formula should work with every version of python. Only basic modules (like `
 None of the formula in this package where derived or invented by me. The only thing I did was an implementation in python.
 
 The raw formula (and an implementation in VBA) are published by Ed Williams and can be found under the name [Aviation Formulary V1.46](http://www.edwilliams.org/avform.htm).
+and https://www.movable-type.co.uk/scripts/latlong.html
 
 ## Changelog
+### version 0.03 - 28.01.2019
+* Updated to include distance, bearing, and cross track distance
+
 ### version 0.0.2 - 15.12.2018
 * Small fixes for wrong calculated distances
 

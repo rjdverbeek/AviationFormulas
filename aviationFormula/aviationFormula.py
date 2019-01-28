@@ -28,7 +28,7 @@ from math import acos, asin, atan2, cos, degrees, pi, radians, sin, sqrt, tan
 import unittest
 
 
-# Calculates the great circle distance in arc angle (in radians).
+## Calculates the great circle distance in arc angle (in radians).
 def gc_distance_rad(lat_deg1, lon_deg1, lat_deg2, lon_deg2):
     # Haversine formula https://www.movable-type.co.uk/scripts/latlong.html
     lat1 = radians(lat_deg1)
@@ -39,14 +39,14 @@ def gc_distance_rad(lat_deg1, lon_deg1, lat_deg2, lon_deg2):
     return 2 * atan2(sqrt(a), sqrt(1 - a))
 
 
-# Calculates the great circle distance in nautical miles.
+## Calculates the great circle distance in nautical miles.
 def gc_distance_nm(lat_deg1, lon_deg1, lat_deg2, lon_deg2):
     radius_earth_m = 6371008.7714  # Mean radius earth WGS-84
     radius_earth_nm = radius_earth_m / 1852
     return gc_distance_rad(lat_deg1, lon_deg1, lat_deg2, lon_deg2) * radius_earth_nm
 
 
-# Calculates the initial bearing in degrees
+## Calculates the initial bearing in degrees
 def init_bearing_deg(lat_deg1, lon_deg1, lat_deg2, lon_deg2):
     lat1 = radians(lat_deg1)
     lat2 = radians(lat_deg2)
@@ -55,22 +55,22 @@ def init_bearing_deg(lat_deg1, lon_deg1, lat_deg2, lon_deg2):
                          cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dlon))))
 
 
-# Calculate the final bearing in degrees
+## Calculate the final bearing in degrees
 def final_bearing_deg(lat_deg1, lon_deg1, lat_deg2, lon_deg2):
     return normalize_angle_deg(init_bearing_deg(lat_deg2, lon_deg2, lat_deg1, lon_deg1) + 180)
 
 
-# Normalise to compass bearing (0 to 360 degrees)
+## Normalise to compass bearing (0 to 360 degrees)
 def normalize_angle_deg(angle_deg):
     return angle_deg % 360.0
 
 
-# Normalise to -180 to +180 degrees
+## Normalise to -180 to +180 degrees
 def normalize_longitude_deg(lon_deg):
     return (lon_deg + 540.0) % 360.0 - 180.0
 
 
-# Calculates the intermediate coordinates of two points.
+## Calculates the intermediate coordinates of two points.
 # The optional 5th argument is the relative distance to point 1.
 # 0 returns point 1, 1 returns point 2. Default is 0.5 and the middle.
 def gc_intermediate_point(lat_deg1, lon_deg1, lat_deg2, lon_deg2, fraction=0.5):
@@ -97,7 +97,7 @@ def gc_intermediate_point(lat_deg1, lon_deg1, lat_deg2, lon_deg2, fraction=0.5):
     else:
         return (lat_deg1, lon_deg1)
 
-
+## Calculate point at a specified distance and bearing from given point
 def point_at_distance_and_bearing(lat_deg1, lon_deg1, distance_nm, init_bearing_deg):
     lat1 = radians(lat_deg1)
     lon1 = radians(lon_deg1)
@@ -110,7 +110,7 @@ def point_at_distance_and_bearing(lat_deg1, lon_deg1, distance_nm, init_bearing_
                         cos(distance_rad) - sin(lat1) * sin(lat2))
     return (degrees(lat2), normalize_longitude_deg(degrees(lon2)))
 
-
+## Calculate the cross track distance in radians from the current track for the given point
 def cross_track_distance_rad(lat_deg1, lon_deg1, lat_deg2, lon_deg2, lat_deg3, lon_deg3):
     distance_13_rad = gc_distance_rad(lat_deg1, lon_deg1, lat_deg3, lon_deg3)
     bearing_13_rad = radians(init_bearing_deg(lat_deg1, lon_deg1, lat_deg3, lon_deg3))

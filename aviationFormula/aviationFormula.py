@@ -111,6 +111,12 @@ def point_at_distance_and_bearing(lat_deg1, lon_deg1, distance_nm, init_bearing_
     return (degrees(lat2), normalize_longitude_deg(degrees(lon2)))
 
 
+def cross_track_distance_rad(lat_deg1, lon_deg1, lat_deg2, lon_deg2, lat_deg3, lon_deg3):
+    distance_13_rad = gc_distance_rad(lat_deg1, lon_deg1, lat_deg3, lon_deg3)
+    bearing_13_rad = radians(init_bearing_deg(lat_deg1, lon_deg1, lat_deg3, lon_deg3))
+    bearing_12_rad = radians(init_bearing_deg(lat_deg1, lon_deg1, lat_deg2, lon_deg2))
+    return asin(sin(distance_13_rad) * sin(bearing_13_rad - bearing_12_rad))
+
 class AviationFormula(unittest.TestCase):
     def test_gc_distance_rad(self):
         lat1_deg = 50
@@ -158,6 +164,17 @@ class AviationFormula(unittest.TestCase):
         lat2, lon2 = point_at_distance_and_bearing(lat1_deg, lon1_deg, distance_nm, bearing_deg)
         self.assertAlmostEqual(lat2, -25.599, places=1)
         self.assertAlmostEqual(lon2, -36.239, places=1)
+
+    def test_cross_track_distance_rad(self):
+        # Example from Ed Williams
+        lat1_deg = 33.0 + 57/60.0
+        lon1_deg = -118 - 24/60.0
+        lat2_deg = 40.0 + 38/60.0
+        lon2_deg = -73.0 - 47/60.0
+        lat3_deg = 34.5
+        lon3_deg = -116.5
+        self.assertAlmostEqual(cross_track_distance_rad(lat1_deg, lon1_deg, lat2_deg, lon2_deg, lat3_deg, lon3_deg),
+                               0.00216778, places=5)
 
 
 if __name__ == '__main__':
